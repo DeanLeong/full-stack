@@ -1,18 +1,27 @@
-const express = require('express');
+const express = require('express')
 const cors = require('cors')
-const bodyParser = require('body-parser');
-const logger = require('morgan');
-const productsRoutes = require('./routes/products');
+const bodyParser = require('body-parser')
+const logger = require('morgan')
+const productsRoutes = require('./routes/products')
 const db = require('./db/connection')
 const PORT = process.env.PORT || 3000
 
-const app = express();
+const app = express()
+
+// example of custom express middleware
+// catch requests for favicon
+const ignoreFavicon = (req, res, next) => {
+    if (req.originalUrl.includes('favicon.ico')) {
+        res.status(204).end()
+    }
+    next()
+}
 
 app.use(cors())
 app.use(bodyParser.json())
 app.use(logger('dev'))
-
-app.use('/api', productsRoutes);
+app.use(ignoreFavicon)
+app.use('/api', productsRoutes)
 
 db.on('error', console.error.bind(console, 'MongoDB connection error:'))
 

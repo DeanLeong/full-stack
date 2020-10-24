@@ -27,7 +27,7 @@ const getProduct = async (req, res) => {
 
 const createProduct = async (req, res) => {
     try {
-        const product = await new Product(req.body)
+        const product = new Product(req.body)
         await product.save()
         res.status(201).json(product)
     } catch (error) {
@@ -43,7 +43,7 @@ const updateProduct = async (req, res) => {
             return res.status(500).json({ error: error.message })
         }
         if (!product) {
-            return res.status(404).json({ message: 'Product not found!' })
+            return res.status(404).json(product)
         }
         res.status(200).json(product)
     })
@@ -51,7 +51,7 @@ const updateProduct = async (req, res) => {
 
 const deleteProduct = async (req, res) => {
     try {
-        const { id } = req.params;
+        const { id } = req.params
         const deleted = await Product.findByIdAndDelete(id)
         if (deleted) {
             return res.status(200).send("Product deleted")
